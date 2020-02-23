@@ -55,6 +55,14 @@ public:
 
   void set_weight_index(size_t index);
 
+  void set_expe_1_index(size_t index);
+  void set_expe_2_index(size_t index);
+  void set_expe_3_index(size_t index);
+  
+  void set_fami_1_index(size_t index);
+  void set_fami_2_index(size_t index);
+  void set_fami_3_index(size_t index);
+
   /**
    * Sorts and gets the unique values in `samples` at variable `var`.
    *
@@ -88,6 +96,15 @@ public:
 
   double get_weight(size_t row) const;
 
+  double get_expe_1(size_t row) const;
+  double get_expe_2(size_t row) const;
+  double get_expe_3(size_t row) const;
+
+  double get_fami_1(size_t row) const;
+  double get_fami_2(size_t row) const;
+  double get_fami_3(size_t row) const;
+
+
   const std::set<size_t>& get_disallowed_split_variables() const;
 
 protected:
@@ -103,6 +120,12 @@ protected:
   nonstd::optional<size_t> treatment_index;
   nonstd::optional<size_t> instrument_index;
   nonstd::optional<size_t> weight_index;
+  nonstd::optional<size_t> expe_1_index;
+  nonstd::optional<size_t> expe_2_index;
+  nonstd::optional<size_t> expe_3_index;
+  nonstd::optional<size_t> fami_1_index;
+  nonstd::optional<size_t> fami_2_index;
+  nonstd::optional<size_t> fami_3_index;
 
 private:
   DISALLOW_COPY_AND_ASSIGN(Data);

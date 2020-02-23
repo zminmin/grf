@@ -34,7 +34,13 @@ Data::Data() :
     outcome_index(),
     treatment_index(),
     instrument_index(),
-    weight_index() {}
+    weight_index(),
+    expe_1_index(),
+    expe_2_index(),
+    expe_3_index(),
+    fami_1_index(),
+    fami_2_index(),
+    fami_3_index() {}
 
 bool Data::load_from_file(const std::string& filename) {
   bool result;
@@ -159,6 +165,32 @@ void Data::set_weight_index(size_t index) {
   disallowed_split_variables.insert(index);
 }
 
+void Data::set_expe_1_index(size_t index) {
+  this->expe_1_index = index;
+  disallowed_split_variables.insert(index);
+}
+void Data::set_expe_2_index(size_t index) {
+  this->expe_2_index = index;
+  disallowed_split_variables.insert(index);
+}
+void Data::set_expe_3_index(size_t index) {
+  this->expe_3_index = index;
+  disallowed_split_variables.insert(index);
+}
+
+void Data::set_fami_1_index(size_t index) {
+  this->fami_1_index = index;
+  disallowed_split_variables.insert(index);
+}
+void Data::set_fami_2_index(size_t index) {
+  this->fami_2_index = index;
+  disallowed_split_variables.insert(index);
+}
+void Data::set_fami_3_index(size_t index) {
+  this->fami_3_index = index;
+  disallowed_split_variables.insert(index);
+}
+
 void Data::get_all_values(std::vector<double>& all_values,
                           std::vector<size_t>& sorted_samples,
                           const std::vector<size_t>& samples,
@@ -258,6 +290,28 @@ double Data::get_weight(size_t row) const {
     return 1.0;
   }
 }
+
+double Data::get_expe_1(size_t row) const {
+  return get(row, expe_1_index.value());
+}
+double Data::get_expe_2(size_t row) const {
+  return get(row, expe_2_index.value());
+}
+double Data::get_expe_3(size_t row) const {
+  return get(row, expe_3_index.value());
+}
+
+double Data::get_fami_1(size_t row) const {
+  return get(row, fami_1_index.value());
+}
+double Data::get_fami_2(size_t row) const {
+  return get(row, fami_2_index.value());
+}
+double Data::get_fami_3(size_t row) const {
+  return get(row, fami_3_index.value());
+}
+
+
 
 const std::set<size_t>& Data::get_disallowed_split_variables() const {
   return disallowed_split_variables;
