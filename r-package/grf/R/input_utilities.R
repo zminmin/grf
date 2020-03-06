@@ -171,7 +171,10 @@ validate_sample_weights <- function(sample.weights, X) {
 #' @importFrom Matrix Matrix cBind
 #' @importFrom methods new
 create_data_matrices <- function(X, outcome = NULL, treatment = NULL,
-                                 instrument = NULL, sample.weights = FALSE) {
+                                 instrument = NULL, 
+                                 expe_1 = NULL, expe_2 = NULL, expe_3 = NULL,
+                                 fami_1 = NULL, fami_2 = NULL, fami_3 = NULL,
+                                 sample.weights = FALSE) {
   default.data <- matrix(nrow = 0, ncol = 0)
   sparse.data <- new("dgCMatrix", Dim = c(0L, 0L))
   out <- list()
@@ -198,12 +201,37 @@ create_data_matrices <- function(X, outcome = NULL, treatment = NULL,
   } else {
     sample.weights = NULL
   }
+  if (!is.null(expe_1)) {
+    i <- i + 1
+    out[["expe_1.index"]] <- ncol(X) + i
+  }
+  if (!is.null(expe_2)) {
+    i <- i + 1
+    out[["expe_2.index"]] <- ncol(X) + i
+  }
+  if (!is.null(expe_3)) {
+    i <- i + 1
+    out[["expe_3.index"]] <- ncol(X) + i
+  }
+  if (!is.null(fami_1)) {
+    i <- i + 1
+    out[["fami_1.index"]] <- ncol(X) + i
+  }
+  if (!is.null(fami_2)) {
+    i <- i + 1
+    out[["fami_2.index"]] <- ncol(X) + i
+  }
+  if (!is.null(fami_3)) {
+    i <- i + 1
+    out[["fami_3.index"]] <- ncol(X) + i
+  }
+
 
   if (inherits(X, "dgCMatrix") && ncol(X) > 1) {
-    sparse.data <- cbind(X, outcome, treatment, instrument, sample.weights)
+    sparse.data <- cbind(X, outcome, treatment, instrument, sample.weights, expe_1, expe_2, expe_3, fami_1, fami_2, fami_3)
   } else {
     X <- as.matrix(X)
-    default.data <- as.matrix(cbind(X, outcome, treatment, instrument, sample.weights))
+    default.data <- as.matrix(cbind(X, outcome, treatment, instrument, sample.weights, expe_1, expe_2, expe_3, fami_1, fami_2, fami_3))
   }
   out[["train.matrix"]] <- default.data
   out[["sparse.train.matrix"]] <- sparse.data

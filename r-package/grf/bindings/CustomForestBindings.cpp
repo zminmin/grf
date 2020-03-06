@@ -31,6 +31,14 @@ using namespace grf;
 Rcpp::List custom_train(Rcpp::NumericMatrix train_matrix,
                         Eigen::SparseMatrix<double> sparse_train_matrix,
                         size_t outcome_index,
+                        size_t expe_1_index,
+                        size_t expe_2_index,
+                        size_t expe_3_index,
+                        size_t fami_1_index,
+                        size_t fami_2_index,
+                        size_t fami_3_index,
+                        size_t ll_split_cutoff,
+                        std::vector<double> overall_beta,
                         unsigned int mtry,
                         unsigned int num_trees,
                         unsigned int min_node_size,
@@ -46,10 +54,19 @@ Rcpp::List custom_train(Rcpp::NumericMatrix train_matrix,
                         bool compute_oob_predictions,
                         unsigned int num_threads,
                         unsigned int seed) {
-  ForestTrainer trainer = custom_trainer();
+
+  ForestTrainer trainer = custom_trainer(overall_beta, ll_split_cutoff);
 
   std::unique_ptr<Data> data = RcppUtilities::convert_data(train_matrix, sparse_train_matrix);
   data->set_outcome_index(outcome_index - 1);
+  data->set_outcome_index(expe_1_index - 1);
+  data->set_outcome_index(expe_2_index - 1);
+  data->set_outcome_index(expe_3_index - 1);
+  data->set_outcome_index(fami_1_index - 1);
+  data->set_outcome_index(fami_2_index - 1);
+  data->set_outcome_index(fami_3_index - 1);
+  data->sort();
+
 
   ForestOptions options(num_trees, ci_group_size, sample_fraction, mtry, min_node_size, honesty,
       honesty_fraction, honesty_prune_leaves, alpha, imbalance_penalty, num_threads, seed, clusters, samples_per_cluster);

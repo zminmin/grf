@@ -37,8 +37,8 @@ ll_causal_predict_oob <- function(forest, input_data, sparse_input_data, outcome
     .Call('_grf_ll_causal_predict_oob', PACKAGE = 'grf', forest, input_data, sparse_input_data, outcome_index, treatment_index, lambdas, use_weighted_penalty, linear_correction_variables, num_threads, estimate_variance)
 }
 
-custom_train <- function(train_matrix, sparse_train_matrix, outcome_index, mtry, num_trees, min_node_size, sample_fraction, honesty, honesty_fraction, honesty_prune_leaves, ci_group_size, alpha, imbalance_penalty, clusters, samples_per_cluster, compute_oob_predictions, num_threads, seed) {
-    .Call('_grf_custom_train', PACKAGE = 'grf', train_matrix, sparse_train_matrix, outcome_index, mtry, num_trees, min_node_size, sample_fraction, honesty, honesty_fraction, honesty_prune_leaves, ci_group_size, alpha, imbalance_penalty, clusters, samples_per_cluster, compute_oob_predictions, num_threads, seed)
+custom_train <- function(train_matrix, sparse_train_matrix, outcome_index, expe_1_index, expe_2_index, expe_3_index, fami_1_index, fami_2_index, fami_3_index, ll_split_cutoff, overall_beta, mtry, num_trees, min_node_size, sample_fraction, honesty, honesty_fraction, honesty_prune_leaves, ci_group_size, alpha, imbalance_penalty, clusters, samples_per_cluster, compute_oob_predictions, num_threads, seed) {
+    .Call('_grf_custom_train', PACKAGE = 'grf', train_matrix, sparse_train_matrix, outcome_index, expe_1_index, expe_2_index, expe_3_index, fami_1_index, fami_2_index, fami_3_index, ll_split_cutoff, overall_beta, mtry, num_trees, min_node_size, sample_fraction, honesty, honesty_fraction, honesty_prune_leaves, ci_group_size, alpha, imbalance_penalty, clusters, samples_per_cluster, compute_oob_predictions, num_threads, seed)
 }
 
 custom_predict <- function(forest_object, train_matrix, sparse_train_matrix, outcome_index, test_matrix, sparse_test_matrix, num_threads) {

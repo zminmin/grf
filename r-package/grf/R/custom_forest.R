@@ -61,10 +61,14 @@
 #' }
 #'
 #' @export
-custom_forest <- function(X, Y,
+custom_forest <- function(X, Y, 
+                          expe_1, expe_2, expe_3, 
+                          fami_1, fami_2, fami_3,
                           sample.fraction = 0.5,
+                          ll.split.cutoff = NULL,
                           mtry = min(ceiling(sqrt(ncol(X)) + 20), ncol(X)),
                           num.trees = 2000,
+                          sample.weights = NULL,
                           min.node.size = 5,
                           honesty = TRUE,
                           honesty.fraction = 0.5,
@@ -77,18 +81,44 @@ custom_forest <- function(X, Y,
                           num.threads = NULL,
                           seed = runif(1, 0, .Machine$integer.max)) {
   validate_X(X)
+  validate_sample_weights(sample.weights, X)
   Y <- validate_observations(Y, X)
+  expe_1 <- validate_observations(expe_1, X)
+  expe_2 <- validate_observations(expe_2, X)
+  expe_3 <- validate_observations(expe_3, X)
+  fami_1 <- validate_observations(fami_1, X)
+  fami_2 <- validate_observations(fami_2, X)
+  fami_3 <- validate_observations(fami_3, X)
   clusters <- validate_clusters(clusters, X)
   samples.per.cluster <- validate_equalize_cluster_weights(equalize.cluster.weights, clusters, NULL)
   num.threads <- validate_num_threads(num.threads)
 
-  no.split.variables <- numeric(0)
+  # no.split.variables <- numeric(0)
 
-  data <- create_data_matrices(X, outcome = Y)
+  data <- create_data_matrices(X, outcome = Y, 
+                              expe_1 = expe_1, expe_2 = expe_2, expe_3 = expe_3,
+                              fami_1 = fami_1, fami_2 = fami_2, fami_3 = fami_3,
+                              sample.weights = sample.weights)
+  
+  D <- cbind(1, expe_1, expe_2, expe_3, fami_1, fami_2, fami_3)
+  overall.beta <- solve(t(D) %*% D) %*% t(D) %*% Y
+
+
   ci.group.size <- 1
 
+  if (is.null(ll.split.cutoff)) {
+    ll.split.cutoff <- 30
+  } else if (!is.numeric(ll.split.cutoff) || length(ll.split.cutoff) > 1) {
+    stop("LL split cutoff must be NULL or a scalar")
+  } else if (ll.split.cutoff < 0 || ll.split.cutoff > num.rows) {
+    stop("Invalid range for LL split cutoff")
+  }
+
   forest <- custom_train(
-    data$train.matrix, data$sparse.train.matrix, data$outcome.index, mtry, num.trees, min.node.size,
+    data$train.matrix, data$sparse.train.matrix, data$outcome.index,
+    data$expe_1.index, data$expe_2.index, data$expe_3.index,
+    data$fami_1.index, data$fami_2.index, data$fami_3.index,
+    ll_split_cutoff, overall.beta, mtry, num.trees, min.node.size,
     sample.fraction, honesty, honesty.fraction, honesty.prune.leaves, ci.group.size, alpha,
     imbalance.penalty, clusters, samples.per.cluster, num.threads, compute.oob.predictions, seed
   )
@@ -96,6 +126,9 @@ custom_forest <- function(X, Y,
   class(forest) <- c("custom_forest", "grf")
   forest[["X.orig"]] <- X
   forest[["Y.orig"]] <- Y
+  forest[["sample.weights"]] <- sample.weights
+
+
   forest
 }
 

@@ -20,15 +20,24 @@
 
 
 #include "RelabelingStrategy.h"
+#include "Eigen/Dense"
 
 namespace grf {
 
 class CustomRelabelingStrategy final: public RelabelingStrategy {
 public:
+
+  CustomRelabelingStrategy(const std::vector<double>& overall_beta,
+                          size_t ll_split_cutoff);
+
   bool relabel(
       const std::vector<size_t>& samples,
       const Data& data,
       std::vector<double>& responses_by_sample) const;
+
+private:
+    const std::vector<double>& overall_beta;
+    size_t ll_split_cutoff;
 };
 
 } // namespace grf

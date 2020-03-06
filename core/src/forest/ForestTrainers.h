@@ -35,7 +35,8 @@ ForestTrainer ll_regression_trainer(double split_lambda,
                                    size_t ll_split_cutoff,
                                    std::vector<size_t> ll_split_variables);
 
-ForestTrainer custom_trainer();
+ForestTrainer custom_trainer(const std::vector<double>& overall_beta,
+                            size_t ll_split_cutoff);
 
 } // namespace grf
 
