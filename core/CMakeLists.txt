@@ -57,5 +57,5 @@ ADD_CUSTOM_TARGET(release
 ## ======================================================================================##
 ## Executable
 ## ======================================================================================##
-add_executable(grf ${SOURCES})
+add_executable(grf ${SOURCES} test/prediction/CustomPredictionStrategyTest.cpp)
 

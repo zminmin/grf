@@ -110,7 +110,7 @@ custom_forest <- function(X, Y,
     ll.split.cutoff <- 30
   } else if (!is.numeric(ll.split.cutoff) || length(ll.split.cutoff) > 1) {
     stop("LL split cutoff must be NULL or a scalar")
-  } else if (ll.split.cutoff < 0 || ll.split.cutoff > num.rows) {
+  } else if (ll.split.cutoff < 0) {
     stop("Invalid range for LL split cutoff")
   }
 
@@ -118,9 +118,9 @@ custom_forest <- function(X, Y,
     data$train.matrix, data$sparse.train.matrix, data$outcome.index,
     data$expe_1.index, data$expe_2.index, data$expe_3.index,
     data$fami_1.index, data$fami_2.index, data$fami_3.index,
-    ll_split_cutoff, overall.beta, mtry, num.trees, min.node.size,
+    ll.split.cutoff, overall.beta, mtry, num.trees, min.node.size,
     sample.fraction, honesty, honesty.fraction, honesty.prune.leaves, ci.group.size, alpha,
-    imbalance.penalty, clusters, samples.per.cluster, num.threads, compute.oob.predictions, seed
+    imbalance.penalty, clusters, samples.per.cluster, compute.oob.predictions, num.threads, seed
   )
 
   class(forest) <- c("custom_forest", "grf")

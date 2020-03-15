@@ -1,2 +1,3 @@
 *.DS_Store
 .Rproj.user
+core/cmake-build-debug
