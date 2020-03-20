@@ -59,12 +59,12 @@ Rcpp::List custom_train(Rcpp::NumericMatrix train_matrix,
 
   std::unique_ptr<Data> data = RcppUtilities::convert_data(train_matrix, sparse_train_matrix);
   data->set_outcome_index(outcome_index - 1);
-  data->set_outcome_index(expe_1_index - 1);
-  data->set_outcome_index(expe_2_index - 1);
-  data->set_outcome_index(expe_3_index - 1);
-  data->set_outcome_index(fami_1_index - 1);
-  data->set_outcome_index(fami_2_index - 1);
-  data->set_outcome_index(fami_3_index - 1);
+  data->set_expe_1_index(expe_1_index - 1);
+  data->set_expe_2_index(expe_2_index - 1);
+  data->set_expe_3_index(expe_3_index - 1);
+  data->set_fami_1_index(fami_1_index - 1);
+  data->set_fami_2_index(fami_2_index - 1);
+  data->set_fami_3_index(fami_3_index - 1);
   data->sort();
 
 

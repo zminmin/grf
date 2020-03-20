@@ -190,17 +190,6 @@ create_data_matrices <- function(X, outcome = NULL, treatment = NULL,
     i <- i + 1
     out[["instrument.index"]] <- ncol(X) + i
   }
-  if (!isFALSE(sample.weights)) {
-    i <- i + 1
-    out[["sample.weight.index"]] <- ncol(X) + i
-    if (is.null(sample.weights)) {
-      out[["use.sample.weights"]] <- FALSE
-    } else {
-      out[["use.sample.weights"]] <- TRUE
-    }
-  } else {
-    sample.weights = NULL
-  }
   if (!is.null(expe_1)) {
     i <- i + 1
     out[["expe_1.index"]] <- ncol(X) + i
@@ -225,13 +214,25 @@ create_data_matrices <- function(X, outcome = NULL, treatment = NULL,
     i <- i + 1
     out[["fami_3.index"]] <- ncol(X) + i
   }
+  if (!isFALSE(sample.weights)) {
+    i <- i + 1
+    out[["sample.weight.index"]] <- ncol(X) + i
+    if (is.null(sample.weights)) {
+      out[["use.sample.weights"]] <- FALSE
+    } else {
+      out[["use.sample.weights"]] <- TRUE
+    }
+  } else {
+    sample.weights = NULL
+  }
+
 
 
   if (inherits(X, "dgCMatrix") && ncol(X) > 1) {
-    sparse.data <- cbind(X, outcome, treatment, instrument, sample.weights, expe_1, expe_2, expe_3, fami_1, fami_2, fami_3)
+    sparse.data <- cbind(X, outcome, treatment, instrument, expe_1, expe_2, expe_3, fami_1, fami_2, fami_3, sample.weights)
   } else {
     X <- as.matrix(X)
-    default.data <- as.matrix(cbind(X, outcome, treatment, instrument, sample.weights, expe_1, expe_2, expe_3, fami_1, fami_2, fami_3))
+    default.data <- as.matrix(cbind(X, outcome, treatment, instrument, expe_1, expe_2, expe_3, fami_1, fami_2, fami_3, sample.weights))
   }
   out[["train.matrix"]] <- default.data
   out[["sparse.train.matrix"]] <- sparse.data

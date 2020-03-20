@@ -45,8 +45,7 @@ bool CustomRelabelingStrategy::relabel(
   for (size_t j = 0; j < num_variables; ++j) {
       barW(0, j) = 0.0;
   }
-  
-  for (size_t i = 0; i < num_data_points; ++i) {
+  for (size_t i = 0; i < num_data_points; ++i) { 
     Y(i) = data.get_outcome(samples[i]);
     tempW(i, 0) = 1.0;
     tempW(i, 1) = data.get_expe_1(samples[i]);
@@ -157,7 +156,8 @@ bool CustomRelabelingStrategy::relabel(
     for (size_t j = 0; j < num_variables; ++j) {
       commonP += EpsApinv(0, j) * (W(i, j) - barW(0, j));
     }
-    double residual =  commonP * (Y(sample) - barY - leaf_predictions(i) + average_treatment(0, 0));
+    // pay attention: the previous design has Y(i,0) as Y(sample), which leads to error in access (index out of range)
+    double residual =  commonP * (Y(i, 0) - barY - leaf_predictions(i, 0) + average_treatment(0, 0));
     responses_by_sample[sample] = residual;
     i++;
   }
