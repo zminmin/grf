@@ -28,6 +28,9 @@
 #'  small/marginally powered data, but requires more trees (note: tuning does not adjust the number of trees).
 #'  Only applies if honesty is enabled. Default is TRUE.
 #' @param alpha A tuning parameter that controls the maximum imbalance of a split. Default is 0.05.
+#' @param ci.group.size The forest will grow ci.group.size trees on each subsample.
+#'                      In order to provide confidence intervals, ci.group.size must
+#'                      be at least 2. Default is 2.
 #' @param imbalance.penalty A tuning parameter that controls how harshly imbalanced splits are penalized. Default is 0.
 #' @param clusters Vector of integers or factors specifying which cluster each observation corresponds to.
 #'  Default is NULL (ignored).
@@ -74,6 +77,7 @@ custom_forest <- function(X, Y,
                           honesty.fraction = 0.5,
                           honesty.prune.leaves = TRUE,
                           alpha = 0.05,
+                          ci.group.size = 2,
                           imbalance.penalty = 0.0,
                           clusters = NULL,
                           equalize.cluster.weights = FALSE,
@@ -104,8 +108,6 @@ custom_forest <- function(X, Y,
   overall.beta <- solve(t(D) %*% D) %*% t(D) %*% Y
 
 
-  ci.group.size <- 1
-
   if (is.null(ll.split.cutoff)) {
     ll.split.cutoff <- 30
   } else if (!is.numeric(ll.split.cutoff) || length(ll.split.cutoff) > 1) {
@@ -126,6 +128,12 @@ custom_forest <- function(X, Y,
   class(forest) <- c("custom_forest", "grf")
   forest[["X.orig"]] <- X
   forest[["Y.orig"]] <- Y
+  forest[["e1.orig"]] <- expe_1
+  forest[["e2.orig"]] <- expe_2
+  forest[["e3.orig"]] <- expe_3
+  forest[["f1.orig"]] <- fami_1
+  forest[["f2.orig"]] <- fami_2
+  forest[["f3.orig"]] <- fami_3
   forest[["sample.weights"]] <- sample.weights
 
 
@@ -163,22 +171,35 @@ custom_forest <- function(X, Y,
 #'
 #' @method predict custom_forest
 #' @export
-predict.custom_forest <- function(object, newdata = NULL, num.threads = NULL, ...) {
+predict.custom_forest <- function(object, newdata = NULL, num.threads = NULL, estimate.variance = TRUE, ...) {
   forest.short <- object[-which(names(object) == "X.orig")]
 
   X <- object[["X.orig"]]
-  train.data <- create_data_matrices(X, object[["Y.orig"]])
+  train.data <- create_data_matrices(X, outcome = object[["Y.orig"]], 
+                                    expe_1 = object[["e1.orig"]],  expe_2 = object[["e2.orig"]], expe_3 = object[["e3.orig"]],
+                                    fami_1 = object[["f1.orig"]],  fami_2 = object[["f2.orig"]], fami_3 = object[["f3.orig"]])
 
   num.threads <- validate_num_threads(num.threads)
 
   if (!is.null(newdata)) {
     validate_newdata(newdata, X)
     data <- create_data_matrices(newdata)
-    custom_predict(
+    ret <- custom_predict(
       forest.short, train.data$train.matrix, train.data$sparse.train.matrix, train.data$outcome.index,
-      data$train.matrix, data$sparse.train.matrix, num.threads
+      train.data$expe_1.index, train.data$expe_2.index, train.data$expe_3.index,
+      train.data$fami_1.index, train.data$fami_2.index, train.data$fami_3.index,
+      data$train.matrix, data$sparse.train.matrix, num.threads, estimate.variance
     )
   } else {
-    custom_predict_oob(forest.short, train.data$train.matrix, train.data$sparse.train.matrix, train.data$outcome.index, num.threads)
+    ret <- custom_predict_oob(
+      forest.short, train.data$train.matrix, train.data$sparse.train.matrix, train.data$outcome.index, 
+      train.data$expe_1.index, train.data$expe_2.index, train.data$expe_3.index,
+      train.data$fami_1.index, train.data$fami_2.index, train.data$fami_3.index,
+      num.threads, estimate.variance
+    )
   }
+  
+  # Convert list to data frame.
+  empty <- sapply(ret, function(elem) length(elem) == 0)
+  do.call(cbind.data.frame, ret[!empty])
 }

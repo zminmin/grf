@@ -75,48 +75,76 @@ Rcpp::List custom_train(Rcpp::NumericMatrix train_matrix,
   std::vector<Prediction> predictions;
   if (compute_oob_predictions) {
     ForestPredictor predictor = custom_predictor(num_threads);
-    predictions = predictor.predict_oob(forest, *data, false);
+    predictions = predictor.predict_oob(forest, *data, true);
   }
 
   return RcppUtilities::create_forest_object(forest, predictions);
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericMatrix custom_predict(Rcpp::List forest_object,
+Rcpp::List custom_predict(Rcpp::List forest_object,
                                    Rcpp::NumericMatrix train_matrix,
                                    Eigen::SparseMatrix<double> sparse_train_matrix,
                                    size_t outcome_index,
+                                   size_t expe_1_index,
+                                   size_t expe_2_index,
+                                   size_t expe_3_index,
+                                   size_t fami_1_index,
+                                   size_t fami_2_index,
+                                   size_t fami_3_index,
                                    Rcpp::NumericMatrix test_matrix,
                                    Eigen::SparseMatrix<double> sparse_test_matrix,
-                                   unsigned int num_threads) {
+                                   unsigned int num_threads,
+                                   bool estimate_variance) {
   std::unique_ptr<Data> train_data = RcppUtilities::convert_data(train_matrix, sparse_train_matrix);
   train_data->set_outcome_index(outcome_index - 1);
+  train_data->set_expe_1_index(expe_1_index - 1);
+  train_data->set_expe_2_index(expe_2_index - 1);
+  train_data->set_expe_3_index(expe_3_index - 1);
+  train_data->set_fami_1_index(fami_1_index - 1);
+  train_data->set_fami_2_index(fami_2_index - 1);
+  train_data->set_fami_3_index(fami_3_index - 1);
   std::unique_ptr<Data> data = RcppUtilities::convert_data(test_matrix, sparse_test_matrix);
 
   Forest forest = RcppUtilities::deserialize_forest(forest_object);
 
   ForestPredictor predictor = custom_predictor(num_threads);
-  std::vector<Prediction> predictions = predictor.predict(forest, *train_data, *data, false);
-  Rcpp::NumericMatrix result = RcppUtilities::create_prediction_matrix(predictions);
+  std::vector<Prediction> predictions = predictor.predict(forest, *train_data, *data, estimate_variance);
+  // Rcpp::NumericMatrix result = RcppUtilities::create_prediction_matrix(predictions);
+  Rcpp::List result = RcppUtilities::create_prediction_object(predictions);
 
   return result;
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericMatrix custom_predict_oob(Rcpp::List forest_object,
+Rcpp::List custom_predict_oob(Rcpp::List forest_object,
                                        Rcpp::NumericMatrix train_matrix,
                                        Eigen::SparseMatrix<double> sparse_train_matrix,
                                        size_t outcome_index,
-                                       unsigned int num_threads) {
+                                       size_t expe_1_index,
+                                       size_t expe_2_index,
+                                       size_t expe_3_index,
+                                       size_t fami_1_index,
+                                       size_t fami_2_index,
+                                       size_t fami_3_index,
+                                       unsigned int num_threads,
+                                       bool estimate_variance) {
   std::unique_ptr<Data> data = RcppUtilities::convert_data(train_matrix, sparse_train_matrix);
-  data->set_outcome_index(outcome_index);
+  data->set_outcome_index(outcome_index - 1);
+  data->set_expe_1_index(expe_1_index - 1);
+  data->set_expe_2_index(expe_2_index - 1);
+  data->set_expe_3_index(expe_3_index - 1);
+  data->set_fami_1_index(fami_1_index - 1);
+  data->set_fami_2_index(fami_2_index - 1);
+  data->set_fami_3_index(fami_3_index - 1);
   data->sort();
 
   Forest forest = RcppUtilities::deserialize_forest(forest_object);
 
   ForestPredictor predictor = custom_predictor(num_threads);
-  std::vector<Prediction> predictions = predictor.predict_oob(forest, *data, false);
-  Rcpp::NumericMatrix result = RcppUtilities::create_prediction_matrix(predictions);
+  std::vector<Prediction> predictions = predictor.predict_oob(forest, *data, estimate_variance);
+  // Rcpp::NumericMatrix result = RcppUtilities::create_prediction_matrix(predictions);
+  Rcpp::List result = RcppUtilities::create_prediction_object(predictions);
 
   return result;
 }

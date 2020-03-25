@@ -207,8 +207,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // custom_predict
-Rcpp::NumericMatrix custom_predict(Rcpp::List forest_object, Rcpp::NumericMatrix train_matrix, Eigen::SparseMatrix<double> sparse_train_matrix, size_t outcome_index, Rcpp::NumericMatrix test_matrix, Eigen::SparseMatrix<double> sparse_test_matrix, unsigned int num_threads);
-RcppExport SEXP _grf_custom_predict(SEXP forest_objectSEXP, SEXP train_matrixSEXP, SEXP sparse_train_matrixSEXP, SEXP outcome_indexSEXP, SEXP test_matrixSEXP, SEXP sparse_test_matrixSEXP, SEXP num_threadsSEXP) {
+Rcpp::List custom_predict(Rcpp::List forest_object, Rcpp::NumericMatrix train_matrix, Eigen::SparseMatrix<double> sparse_train_matrix, size_t outcome_index, size_t expe_1_index, size_t expe_2_index, size_t expe_3_index, size_t fami_1_index, size_t fami_2_index, size_t fami_3_index, Rcpp::NumericMatrix test_matrix, Eigen::SparseMatrix<double> sparse_test_matrix, unsigned int num_threads, bool estimate_variance);
+RcppExport SEXP _grf_custom_predict(SEXP forest_objectSEXP, SEXP train_matrixSEXP, SEXP sparse_train_matrixSEXP, SEXP outcome_indexSEXP, SEXP expe_1_indexSEXP, SEXP expe_2_indexSEXP, SEXP expe_3_indexSEXP, SEXP fami_1_indexSEXP, SEXP fami_2_indexSEXP, SEXP fami_3_indexSEXP, SEXP test_matrixSEXP, SEXP sparse_test_matrixSEXP, SEXP num_threadsSEXP, SEXP estimate_varianceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -216,16 +216,23 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type train_matrix(train_matrixSEXP);
     Rcpp::traits::input_parameter< Eigen::SparseMatrix<double> >::type sparse_train_matrix(sparse_train_matrixSEXP);
     Rcpp::traits::input_parameter< size_t >::type outcome_index(outcome_indexSEXP);
+    Rcpp::traits::input_parameter< size_t >::type expe_1_index(expe_1_indexSEXP);
+    Rcpp::traits::input_parameter< size_t >::type expe_2_index(expe_2_indexSEXP);
+    Rcpp::traits::input_parameter< size_t >::type expe_3_index(expe_3_indexSEXP);
+    Rcpp::traits::input_parameter< size_t >::type fami_1_index(fami_1_indexSEXP);
+    Rcpp::traits::input_parameter< size_t >::type fami_2_index(fami_2_indexSEXP);
+    Rcpp::traits::input_parameter< size_t >::type fami_3_index(fami_3_indexSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type test_matrix(test_matrixSEXP);
     Rcpp::traits::input_parameter< Eigen::SparseMatrix<double> >::type sparse_test_matrix(sparse_test_matrixSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type num_threads(num_threadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(custom_predict(forest_object, train_matrix, sparse_train_matrix, outcome_index, test_matrix, sparse_test_matrix, num_threads));
+    Rcpp::traits::input_parameter< bool >::type estimate_variance(estimate_varianceSEXP);
+    rcpp_result_gen = Rcpp::wrap(custom_predict(forest_object, train_matrix, sparse_train_matrix, outcome_index, expe_1_index, expe_2_index, expe_3_index, fami_1_index, fami_2_index, fami_3_index, test_matrix, sparse_test_matrix, num_threads, estimate_variance));
     return rcpp_result_gen;
 END_RCPP
 }
 // custom_predict_oob
-Rcpp::NumericMatrix custom_predict_oob(Rcpp::List forest_object, Rcpp::NumericMatrix train_matrix, Eigen::SparseMatrix<double> sparse_train_matrix, size_t outcome_index, unsigned int num_threads);
-RcppExport SEXP _grf_custom_predict_oob(SEXP forest_objectSEXP, SEXP train_matrixSEXP, SEXP sparse_train_matrixSEXP, SEXP outcome_indexSEXP, SEXP num_threadsSEXP) {
+Rcpp::List custom_predict_oob(Rcpp::List forest_object, Rcpp::NumericMatrix train_matrix, Eigen::SparseMatrix<double> sparse_train_matrix, size_t outcome_index, size_t expe_1_index, size_t expe_2_index, size_t expe_3_index, size_t fami_1_index, size_t fami_2_index, size_t fami_3_index, unsigned int num_threads, bool estimate_variance);
+RcppExport SEXP _grf_custom_predict_oob(SEXP forest_objectSEXP, SEXP train_matrixSEXP, SEXP sparse_train_matrixSEXP, SEXP outcome_indexSEXP, SEXP expe_1_indexSEXP, SEXP expe_2_indexSEXP, SEXP expe_3_indexSEXP, SEXP fami_1_indexSEXP, SEXP fami_2_indexSEXP, SEXP fami_3_indexSEXP, SEXP num_threadsSEXP, SEXP estimate_varianceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -233,8 +240,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type train_matrix(train_matrixSEXP);
     Rcpp::traits::input_parameter< Eigen::SparseMatrix<double> >::type sparse_train_matrix(sparse_train_matrixSEXP);
     Rcpp::traits::input_parameter< size_t >::type outcome_index(outcome_indexSEXP);
+    Rcpp::traits::input_parameter< size_t >::type expe_1_index(expe_1_indexSEXP);
+    Rcpp::traits::input_parameter< size_t >::type expe_2_index(expe_2_indexSEXP);
+    Rcpp::traits::input_parameter< size_t >::type expe_3_index(expe_3_indexSEXP);
+    Rcpp::traits::input_parameter< size_t >::type fami_1_index(fami_1_indexSEXP);
+    Rcpp::traits::input_parameter< size_t >::type fami_2_index(fami_2_indexSEXP);
+    Rcpp::traits::input_parameter< size_t >::type fami_3_index(fami_3_indexSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type num_threads(num_threadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(custom_predict_oob(forest_object, train_matrix, sparse_train_matrix, outcome_index, num_threads));
+    Rcpp::traits::input_parameter< bool >::type estimate_variance(estimate_varianceSEXP);
+    rcpp_result_gen = Rcpp::wrap(custom_predict_oob(forest_object, train_matrix, sparse_train_matrix, outcome_index, expe_1_index, expe_2_index, expe_3_index, fami_1_index, fami_2_index, fami_3_index, num_threads, estimate_variance));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -523,8 +537,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_grf_ll_causal_predict", (DL_FUNC) &_grf_ll_causal_predict, 12},
     {"_grf_ll_causal_predict_oob", (DL_FUNC) &_grf_ll_causal_predict_oob, 10},
     {"_grf_custom_train", (DL_FUNC) &_grf_custom_train, 26},
-    {"_grf_custom_predict", (DL_FUNC) &_grf_custom_predict, 7},
-    {"_grf_custom_predict_oob", (DL_FUNC) &_grf_custom_predict_oob, 5},
+    {"_grf_custom_predict", (DL_FUNC) &_grf_custom_predict, 14},
+    {"_grf_custom_predict_oob", (DL_FUNC) &_grf_custom_predict_oob, 12},
     {"_grf_instrumental_train", (DL_FUNC) &_grf_instrumental_train, 24},
     {"_grf_instrumental_predict", (DL_FUNC) &_grf_instrumental_predict, 10},
     {"_grf_instrumental_predict_oob", (DL_FUNC) &_grf_instrumental_predict_oob, 8},

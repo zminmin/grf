@@ -18,7 +18,14 @@
 #ifndef GRF_CUSTOMPREDICTIONSTRATEGY_H
 #define GRF_CUSTOMPREDICTIONSTRATEGY_H
 
-#include "DefaultPredictionStrategy.h"
+#include <cstddef>
+#include <unordered_map>
+#include "Eigen/Dense"
+#include "commons/Data.h"
+#include "prediction/Prediction.h"
+#include "prediction/DefaultPredictionStrategy.h"
+#include "prediction/PredictionValues.h"
+#include "ObjectiveBayesDebiaser.h"
 
 namespace grf {
 
@@ -39,6 +46,9 @@ public:
       const Data& train_data,
       const Data& data,
       size_t ci_group_size) const;
+
+private:
+  ObjectiveBayesDebiaser bayes_debiaser;
 };
 
 } // namespace grf

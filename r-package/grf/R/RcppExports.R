@@ -41,12 +41,12 @@ custom_train <- function(train_matrix, sparse_train_matrix, outcome_index, expe_
     .Call('_grf_custom_train', PACKAGE = 'grf', train_matrix, sparse_train_matrix, outcome_index, expe_1_index, expe_2_index, expe_3_index, fami_1_index, fami_2_index, fami_3_index, ll_split_cutoff, overall_beta, mtry, num_trees, min_node_size, sample_fraction, honesty, honesty_fraction, honesty_prune_leaves, ci_group_size, alpha, imbalance_penalty, clusters, samples_per_cluster, compute_oob_predictions, num_threads, seed)
 }
 
-custom_predict <- function(forest_object, train_matrix, sparse_train_matrix, outcome_index, test_matrix, sparse_test_matrix, num_threads) {
-    .Call('_grf_custom_predict', PACKAGE = 'grf', forest_object, train_matrix, sparse_train_matrix, outcome_index, test_matrix, sparse_test_matrix, num_threads)
+custom_predict <- function(forest_object, train_matrix, sparse_train_matrix, outcome_index, expe_1_index, expe_2_index, expe_3_index, fami_1_index, fami_2_index, fami_3_index, test_matrix, sparse_test_matrix, num_threads, estimate_variance) {
+    .Call('_grf_custom_predict', PACKAGE = 'grf', forest_object, train_matrix, sparse_train_matrix, outcome_index, expe_1_index, expe_2_index, expe_3_index, fami_1_index, fami_2_index, fami_3_index, test_matrix, sparse_test_matrix, num_threads, estimate_variance)
 }
 
-custom_predict_oob <- function(forest_object, train_matrix, sparse_train_matrix, outcome_index, num_threads) {
-    .Call('_grf_custom_predict_oob', PACKAGE = 'grf', forest_object, train_matrix, sparse_train_matrix, outcome_index, num_threads)
+custom_predict_oob <- function(forest_object, train_matrix, sparse_train_matrix, outcome_index, expe_1_index, expe_2_index, expe_3_index, fami_1_index, fami_2_index, fami_3_index, num_threads, estimate_variance) {
+    .Call('_grf_custom_predict_oob', PACKAGE = 'grf', forest_object, train_matrix, sparse_train_matrix, outcome_index, expe_1_index, expe_2_index, expe_3_index, fami_1_index, fami_2_index, fami_3_index, num_threads, estimate_variance)
 }
 
 instrumental_train <- function(train_matrix, sparse_train_matrix, outcome_index, treatment_index, instrument_index, sample_weight_index, use_sample_weights, mtry, num_trees, min_node_size, sample_fraction, honesty, honesty_fraction, honesty_prune_leaves, ci_group_size, reduced_form_weight, alpha, imbalance_penalty, stabilize_splits, clusters, samples_per_cluster, compute_oob_predictions, num_threads, seed) {

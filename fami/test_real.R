@@ -56,7 +56,7 @@ dt <- centering(dt[,1:x_number], dt$Y, dt$e1, dt$e2, dt$e3, dt$f1, dt$f2, dt$f3)
 
 
 
-#X <- dt[,1:441]
+X <- dt[,1:441]
 X <- dt[,1:6]
 Y <- dt$Y
 e1 <- dt$e1
@@ -74,5 +74,15 @@ f3 <- dt$f3
 
 
 #forest <- instrumental_forest(X, Y, W, IV, num.trees = 200)
-forest <- custom_forest(X, Y, e1, e2, e3, f1, f2, f3, ll.split.cutoff = 100, num.trees = 200)
-predictions <- predict(forest, X)
+forest <- custom_forest(X, Y, e1, e2, e3, f1, f2, f3, ll.split.cutoff = 100, num.trees = 2000, ci.group.size = 10)
+
+i <- 3
+hist(forest$predictions[,i])
+mean(forest$predictions[,i]/sqrt(forest$variance.estimates[,i]) > 1.96) *100
+mean((forest$predictions[,i]/sqrt(forest$variance.estimates[,i]) < 1.96) & (forest$predictions[,i]/sqrt(forest$variance.estimates[,i]) > 0)) * 100
+mean(forest$predictions[,i]/sqrt(forest$variance.estimates[,i]) < -1.96) * 100
+mean((forest$predictions[,i]/sqrt(forest$variance.estimates[,i]) > -1.96) & (forest$predictions[,i]/sqrt(forest$variance.estimates[,i]) < 0)) * 100
+
+
+
+
