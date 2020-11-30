@@ -35,7 +35,7 @@ boot_size <- 100	# tree number in one forest
 
 
 
-my_forest <- list()
+grf_forest <- list()
 for(for_index in 1:forest_size) {
 	record <- list()
 	record_index <- 1
@@ -92,26 +92,26 @@ for(for_index in 1:forest_size) {
 		record_index = record_index + 1
 	}
 
-	my_forest[[for_index]] = record
+	grf_forest[[for_index]] = record
 }
 
 print("End Test ... ")
 
-AVE <- matrix(0, 6, length(train_size))
-COV_P <- matrix(0, 6, length(train_size))
-for (tree_k in my_forest) {
+grf_AVE <- matrix(0, 6, length(train_size))
+grf_COV_P <- matrix(0, 6, length(train_size))
+for (tree_k in grf_forest) {
 	for (k in 1:length(train_size)) {
 		# print(k)
 		# print(as.matrix(tree_k[[k]]$MSE))
-		AVE[, k] = AVE[, k] + as.matrix(tree_k[[k]]$MSE)
-		COV_P[, k] = COV_P[, k] + as.matrix(tree_k[[k]]$Cover_Prob)
+		grf_AVE[, k] = grf_AVE[, k] + as.matrix(tree_k[[k]]$MSE)
+		grf_COV_P[, k] = grf_COV_P[, k] + as.matrix(tree_k[[k]]$Cover_Prob)
 	}
 }
-AVE = AVE / length(my_forest)
-COV_P = COV_P / length(my_forest)
+grf_AVE = grf_AVE / length(grf_forest)
+grf_COV_P = grf_COV_P / length(grf_forest)
 
-print(AVE)
-print(COV_P)
+print(grf_AVE)
+print(grf_COV_P)
 
 Name_start <- "other_data_build_"
 if(this_type == 0){
@@ -139,4 +139,4 @@ if(this_type == 1){
 		file_name <- paste0(Name_start, this_design, "_N", ".RData")}
 }
 
-save(AVE, COV_P, my_forest, file = file_name)
+save(grf_AVE, grf_COV_P, grf_forest, file = file_name)
